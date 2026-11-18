@@ -58,6 +58,12 @@ class AdapterRecView (private val listWayang: ArrayList<DcWayang>) :
                 onItemClickCallback.onItemClicked(data = wayang)
             }
         }
+
+        holder.binding.btnHapus.setOnClickListener {
+            listWayang.removeAt(position)
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, listWayang.size)
+        }
     }
 
     override fun getItemCount(): Int {
