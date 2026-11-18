@@ -2,10 +2,13 @@ package uts.c14240126.recyclerview
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import uts.c14240126.recyclerview.databinding.ActivityMainBinding
@@ -67,6 +70,10 @@ class MainActivity : AppCompatActivity() {
             binding.rvWayang.layoutManager = LinearLayoutManager(this)
         }
 
+        binding.rvWayang.itemAnimator = DefaultItemAnimator().apply {
+            removeDuration = 400L
+        }
+
         val adapterWayang = AdapterRecView(_arWayang)
         adapterWayang.setOnItemClickCallback(object : AdapterRecView.OnItemClickCallback {
             override fun onItemClicked(data: DcWayang) {
@@ -77,6 +84,25 @@ class MainActivity : AppCompatActivity() {
                     putExtra("foto", data.foto)
                 }
                 startActivity(intent)
+            }
+
+            override fun delData(pos: Int) {
+                val item = _arWayang[pos]
+                AlertDialog.Builder(this@MainActivity)
+                    .setTitle("Konfirmasi HAPUS DATA")
+                    .setMessage("Apakah Benar Data ${item.nama} akan dihapus ?")
+                    .setPositiveButton("Hapus") { _, _ ->
+                        _arWayang.removeAt(pos)
+                        adapterWayang.notifyItemRemoved(pos)
+                        adapterWayang.notifyItemRangeChanged(pos, _arWayang.size - pos)
+                        Toast.makeText(
+                            this@MainActivity,
+                            "${item.nama} berhasil dihapus",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    .setNegativeButton("Batal", null)
+                    .show()
             }
         })
         binding.rvWayang.adapter = adapterWayang
