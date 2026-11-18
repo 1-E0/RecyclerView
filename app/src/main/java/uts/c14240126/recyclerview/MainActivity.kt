@@ -5,6 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import uts.c14240126.recyclerview.databinding.ActivityMainBinding
 
@@ -32,6 +33,10 @@ class MainActivity : AppCompatActivity() {
         siapkanData()
         tambahData()
         tampilkanData()
+
+        binding.btnToggleLayout.setOnCheckedChangeListener { _, _ ->
+            tampilkanData()
+        }
     }
 
     private fun siapkanData() {
@@ -55,7 +60,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun tampilkanData() {
-        binding.rvWayang.layoutManager = LinearLayoutManager(this)
+        if (binding.btnToggleLayout.isChecked) {
+            binding.rvWayang.layoutManager = GridLayoutManager(this, 2)
+        } else {
+            binding.rvWayang.layoutManager = LinearLayoutManager(this)
+        }
         binding.rvWayang.adapter = AdapterRecView(_arWayang)
     }
 }
